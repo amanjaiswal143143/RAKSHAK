@@ -1,15 +1,15 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/RAKSHAK-ROAD_SAFETY-ef4444?style=for-the-badge&logo=shield" alt="Rakshak Logo" height="60">
 
-  <br />
-  <br />
+  <img src="https://via.placeholder.com/1200x300/0f172a/ef4444?text=[DROP+YOUR+MAIN+RAKSHAK+BANNER+IMAGE+HERE]" alt="Rakshak Banner" width="100%">
 
-  <img src="https://img.shields.io/badge/IIT_Madras-Hackathon_2026-0f172a?style=flat-square&logo=codeforces" alt="Hackathon Badge" />
-  <img src="https://img.shields.io/badge/React-Vite-61DAFB?style=flat-square&logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat-square&logo=supabase" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Status-Stage_1_Prototype-blue?style=flat-square" alt="Status" />
+  <br><br>
 
-  <h1 align="center">🚨 Rakshak: The Silent SOS</h1>
+  <img src="https://img.shields.io/badge/IIT_Madras-Hackathon_2026-0f172a?style=for-the-badge&logo=codeforces" alt="Hackathon Badge" />
+  <img src="https://img.shields.io/badge/React-Vite-61DAFB?style=for-the-badge&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/BIMSTEC-RoadSoS-ef4444?style=for-the-badge" alt="BIMSTEC" />
+
+  <h1 align="center">🚨 RAKSHAK: The Silent SOS App</h1>
   <p align="center">
     <b>The AI-Powered "Black Box" for Human Safety in the BIMSTEC Region.</b>
     <br />
@@ -17,81 +17,78 @@
   </p>
 
   <p align="center">
-    <a href="#-the-mission">Mission</a> •
-    <a href="#-core-innovations">Features</a> •
-    <a href="#%EF%B8%8F-tech-stack">Tech Stack</a> •
-    <a href="#-getting-started">Setup</a> •
-    <a href="#-ethics--future-scope">Future Scope</a>
+    <a href="#-the-crisis">The Crisis</a> •
+    <a href="#-core-innovations">Features & UI</a> •
+    <a href="#%EF%B8%8F-system-architecture">Architecture</a> •
+    <a href="#-installation">Setup</a> •
+    <a href="#-the-squad">Meet the Team</a>
   </p>
 </div>
 
 ---
 
-> **🏆 Hackathon Track:** Theme 1: AI in Road Safety (RoadSoS)
-> **🎯 Objective:** Provide instant, location-based access to nearby trauma centers, ambulances, police stations, and vehicle rescue during road accidents.
+## 🩸 The Crisis: The "Golden Hour"
+In the event of a catastrophic road traffic accident, the first 60 minutes are the difference between life and death. Traditional emergency apps fail in these high-stress environments:
+1. **Acoustic Chaos:** Wind, sirens, and panic make Voice-AI and NLP completely useless. 
+2. **False Positives:** Automated crash sensors trigger fake alarms when a phone is dropped or overheats on a dashboard.
+3. **Context Blindness:** Emergency responders arrive blind, not knowing if they need a standard ambulance or heavy extraction tools.
 
-## 🌍 The Mission
-
-In the critical "Golden Hour" following a severe road accident, traditional emergency triggers fail. Voice-AI breaks down in acoustic chaos (wind, sirens, panic). Automated hardware sensors trigger dangerous false positives (dropped phones, overheating). 
-
-**Rakshak** bypasses these flaws. We engineered a haptic-first, silent SOS web application that instantly dispatches emergency services while providing automated visual context to trauma teams—requiring zero cognitive load from the victim.
+> **Rakshak** bypasses all of this. We engineered a haptic-first, frictionless web platform that demands zero cognitive load, eliminates false positives, and provides instant visual context to trauma teams.
 
 ---
 
-## ✨ Core Innovations
+## ✨ Core Innovations & UI Flow
 
-<table>
+<table width="100%">
   <tr>
     <td width="60%">
-      <h3>📱 1. Silent SOS (Haptic Trigger)</h3>
-      <p>Designed for chaos. We replaced unreliable voice assistants and complex typing with a massive, high-contrast swipe slider. This guarantees 100% intent certainty, eliminates false positives, and works silently.</p>
+      <h3>📱 1. The "Silent SOS" Trigger</h3>
+      <p>Designed for acoustic chaos and shock. We scrapped voice assistants and typing entirely. Rakshak uses a massive, high-contrast haptic swipe slider. This guarantees <b>100% intent certainty</b> and eliminates the risk of accidental pocket-dials or automated false positives.</p>
     </td>
     <td width="40%" align="center">
-      <i>[Drop your SOS UI Screenshot here]</i><br>
-      <code>![SOS UI](assets/sos-slider.png)</code>
+      <img src="https://via.placeholder.com/300x500/1e293b/ef4444?text=[ADD+SOS+SLIDER+SCREENSHOT+HERE]" alt="SOS Trigger UI">
     </td>
   </tr>
+  
   <tr>
     <td width="60%">
       <h3>📸 2. Automated Visual Triage</h3>
-      <p>The millisecond the SOS is swiped, Rakshak executes a rapid, sequential background capture of the <b>Front Camera</b> (driver consciousness) and <b>Rear Camera</b> (vehicle/road damage), sending instant visual intelligence to hospitals before dispatch.</p>
+      <p>The absolute millisecond the SOS slider is swiped, Rakshak executes a rapid, silent background routine. It sequentially accesses the <b>Front Camera</b> (to capture driver consciousness/injuries) and the <b>Rear Camera</b> (to capture vehicle/road damage). This visual intelligence is sent to the trauma center instantly.</p>
     </td>
     <td width="40%" align="center">
-      <i>[Drop your Triage Screenshot here]</i><br>
-      <code>![Triage UI](assets/triage.png)</code>
+      <img src="https://via.placeholder.com/300x500/1e293b/ef4444?text=[ADD+VISUAL+TRIAGE+SCREENSHOT+HERE]" alt="Visual Triage UI">
     </td>
   </tr>
+
   <tr>
     <td width="60%">
       <h3>📡 3. Last Known Path Recovery (LKPR)</h3>
-      <p>Operating as a digital "Black Box," Rakshak continuously logs the user's GPS trail locally. If the device is crushed or loses network in a remote valley, search teams can reconstruct the trajectory from the last cloud-synced point.</p>
+      <p>A digital "Black Box" for smartphones. Rakshak continuously logs the user's HTML5 GPS breadcrumb trail locally. If the car rolls into a valley and loses signal, or the phone is crushed in the impact, rescue teams can reconstruct the trajectory from the last cloud-synced coordinate.</p>
     </td>
     <td width="40%" align="center">
-      <i>[Drop your Map Screenshot here]</i><br>
-      <code>![Map UI](assets/map.png)</code>
+      <img src="https://via.placeholder.com/300x500/1e293b/ef4444?text=[ADD+MAP+DISPATCH+SCREENSHOT+HERE]" alt="LKPR Map UI">
     </td>
   </tr>
 </table>
 
 ---
 
-## 🛠️ Tech Stack
+## ⚙️ System Architecture
 
-| Domain | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Frontend UI** | **React (Vite) + Tailwind CSS** | High-performance, mobile-first "Emergency Dark" interface. |
-| **Backend & DB** | **Supabase (PostgreSQL)** | Real-time active SOS request logging and spatial querying. |
-| **Mapping / GIS** | **Leaflet.js + HTML5 API** | Real-time geolocation and dynamic emergency service routing. |
-| **Local Resilience** | **IndexedDB / LocalStorage** | Offline LKPR path caching and zero-friction session management. |
+Our tech stack is optimized for **speed, offline resilience, and zero-friction.**
+
+* **Frontend:** Built with `React.js` and `Vite` for lightning-fast DOM rendering. Styled with `Tailwind CSS` using a custom "Emergency Dark" high-contrast theme to reduce glare at night.
+* **Backend:** Powered by `Supabase` (PostgreSQL) for real-time insert operations and spatial data querying.
+* **GIS / Mapping:** `Leaflet.js` integrated with the `HTML5 Geolocation API` for real-time proximity matching (e.g., finding the nearest BIMSTEC trauma center using the Haversine formula).
+* **Identity Management:** **Zero Login Wall.** We use anonymous `localStorage` session IDs. Friction is fatal during a trauma event, so we bypassed traditional Auth entirely.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Installation & Local Setup
 
-Want to test the Rakshak prototype locally? Follow these steps:
+Want to run the Rakshak prototype locally? Follow these steps:
 
-### 1. Clone & Install
+**1. Clone the specific repository:**
 ```bash
-git clone [https://github.com/your-username/rakshak-roadsos.git](https://github.com/your-username/rakshak-roadsos.git)
-cd rakshak-roadsos
-npm install
+git clone [https://github.com/amanjaiswal143143/RAKSHAK.git](https://github.com/amanjaiswal143143/RAKSHAK.git)
+cd RAKSHAK
