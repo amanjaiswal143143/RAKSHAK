@@ -4,82 +4,364 @@
 
   <br>
 
-  [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&weight=700&size=24&pause=1000&color=EF4444&center=true&vCenter=true&width=500&lines=The+Silent+SOS.;Visual+Triage+Intelligence.;Last+Known+Path+Recovery.;Zero-Friction+Emergency+Response.)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter\&weight=700\&size=24\&pause=1000\&color=EF4444\&center=true\&vCenter=true\&width=500\&lines=The+Silent+SOS.;Visual+Triage+Intelligence.;Last+Known+Path+Recovery.;Zero-Friction+Emergency+Response.)](https://git.io/typing-svg)
 
   <p align="center">
-    <b>The AI-Powered "Black Box" for Human Safety in the BIMSTEC Region.</b><br>
-    <i>Developed for the Centre of Excellence for Road Safety (CoERS), IIT Madras Hackathon 2026.</i>
+    <b>Rakshak AI — The Intelligent Emergency Response & Road Safety Platform.</b><br>
+    <i>Built for the IIT Madras CoERS Road Safety Hackathon 2026.</i>
   </p>
 
-  <img src="https://img.shields.io/badge/IIT_Madras-Hackathon-0f172a?style=for-the-badge" alt="IIT Madras">
+  <img src="https://img.shields.io/badge/IIT_Madras-CoERS-red?style=for-the-badge" alt="IIT Madras">
   <img src="https://img.shields.io/badge/React-Vite-61DAFB?style=for-the-badge&logo=react" alt="React">
+  <img src="https://img.shields.io/badge/TailwindCSS-38BDF8?style=for-the-badge&logo=tailwindcss" alt="Tailwind">
   <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase">
-  
-  <br><br>
-</div>
+  <img src="https://img.shields.io/badge/PWA-Offline%20Ready-purple?style=for-the-badge" alt="PWA">
 
-> **🚨 The Golden Hour Crisis:** Traditional emergency apps fail during high-stress road accidents due to acoustic chaos (wind/sirens breaking Voice-AI) and false positives (dropped phones triggering alarms). **Rakshak** bypasses these flaws with a frictionless, haptic-first web platform that demands zero cognitive load and provides instant visual context to trauma teams.
+<br><br>
 
----
-
-## ✨ Core Innovations
-
-### 📱 1. The "Silent SOS" Trigger
-**Designed for chaos.** We scrapped voice assistants and typing entirely. Rakshak uses a massive, high-contrast haptic swipe slider. 
-* **100% Intent Certainty:** Eliminates accidental pocket-dials and automated false positives.
-* **Zero-Friction:** Works silently, requiring no cognitive load from panicked victims.
-
-### 📸 2. Automated Visual Triage
-**Context before arrival.** The absolute millisecond the SOS slider is swiped, Rakshak executes a rapid, silent background routine.
-* **Front Camera:** Captures driver consciousness and injuries.
-* **Rear Camera:** Captures vehicle and road damage.
-* *This visual intelligence is attached to the SOS payload and sent to the trauma center instantly.*
-
-### 📡 3. Last Known Path Recovery (LKPR)
-**A digital "Black Box".** Rakshak continuously logs the user's GPS breadcrumb trail locally. 
-* If a car rolls into a valley and loses signal, or the phone is crushed, rescue teams can reconstruct the trajectory from the last cloud-synced coordinate.
-
----
-
-## 📸 Interface Preview
-
-<div align="center">
-  <img src="https://placehold.co/250x500/0f172a/ef4444?text=Slide+to\nSOS" alt="SOS Trigger" width="30%">
-  <img src="https://placehold.co/250x500/0f172a/3b82f6?text=Visual\nTriage" alt="Visual Triage" width="30%">
-  <img src="https://placehold.co/250x500/0f172a/22c55e?text=Live\nDispatch" alt="Map View" width="30%">
 </div>
 
 ---
 
-## ⚙️ System Architecture
+# 🚨 Problem Statement
 
-Our tech stack is optimized for speed, offline resilience, and immediate deployment.
+Road accidents in BIMSTEC countries often suffer from delayed emergency response due to:
 
-| Domain | Technology | Implementation |
-| :--- | :--- | :--- |
-| **Frontend** | React.js + Vite | Lightning-fast DOM rendering with a custom Tailwind "Emergency Dark" high-contrast theme. |
-| **Backend** | Supabase (PostgreSQL) | Real-time insert operations and spatial data querying. |
-| **GIS / Mapping** | Leaflet.js + HTML5 API | Real-time proximity matching to find the nearest BIMSTEC trauma center (Haversine formula). |
-| **Identity** | Anonymous Session IDs | **Zero Login Wall.** We use local storage. Friction is fatal during trauma; we bypassed Auth entirely. |
+* lack of instant communication,
+* weak internet connectivity,
+* panic during emergencies,
+* absence of real-time context for rescue teams,
+* and high-friction emergency systems.
+
+Traditional emergency apps fail because:
+
+* Voice AI breaks in sirens/wind/noise,
+* login systems waste critical time,
+* and false-positive triggers reduce reliability.
+
+Rakshak AI solves this with a frictionless, offline-resilient, mobile-first emergency response system optimized for the “Golden Hour”.
 
 ---
 
-## 🚀 Quick Start (Local Setup)
+# 🧠 What is Rakshak AI?
 
-To run the Rakshak Stage 1 Prototype locally on your machine:
+Rakshak AI is an intelligent road safety and emergency response platform acting as a digital “Black Box” for human survival.
+
+It combines:
+
+* real-time emergency response,
+* offline fallback systems,
+* guardian live tracking,
+* smart safety intelligence,
+* and lightweight AI-based risk analysis
+
+into a single ultra-fast emergency platform.
+
+---
+
+# ✨ Core Features
+
+## 🚨 1. Silent One-Tap SOS
+
+A massive swipe-based emergency trigger designed for high-stress situations.
+
+### Features:
+
+* One-swipe emergency activation
+* Live GPS coordinates
+* Emergency timestamp
+* Instant backend sync
+* Haptic-inspired UI feedback
+* False-positive prevention
+* Offline emergency backup
+
+---
+
+## 📸 2. Automated Visual Triage
+
+The moment SOS is triggered:
+
+* Front camera captures driver condition
+* Rear camera captures vehicle damage
+* Images are attached to emergency payload
+
+This gives trauma centers visual context before arrival.
+
+---
+
+## 🛰️ 3. Last Known Path Recovery (LKPR)
+
+Rakshak AI continuously stores lightweight GPS breadcrumbs locally.
+
+### Benefits:
+
+* Helps reconstruct movement trajectory
+* Works during network failure
+* Assists rescue teams in dead zones
+* Acts like an aviation black box for vehicles
+
+---
+
+## 🌙 4. Night Safety Mode
+
+After sunset Rakshak automatically:
+
+* enlarges emergency buttons,
+* increases contrast,
+* reduces distractions,
+* and prioritizes emergency actions.
+
+Designed specifically for low-visibility conditions.
+
+---
+
+## ⚠️ 5. Unsafe Stop Detection
+
+If:
+
+* movement stops unexpectedly,
+* it is nighttime,
+* and location appears isolated,
+
+Rakshak AI triggers:
+
+* a safety countdown,
+* “Are You Safe?” verification,
+* and automatic SOS if ignored.
+
+---
+
+## 👨‍👩‍👧 6. Guardian Live Tracking
+
+Users can:
+
+* share temporary live trip links,
+* allow guardians to track movement,
+* and auto-expire links after journey completion.
+
+No login required.
+
+---
+
+## 📶 7. Offline Emergency SMS Fallback
+
+If internet fails:
+
+* Rakshak automatically switches to emergency SMS mode,
+* pre-fills location + emergency details,
+* and allows rapid emergency transmission.
+
+Critical for low-network regions.
+
+---
+
+## 🗺️ 8. Quick Nearby Help
+
+Real-time lightweight map support for:
+
+* Hospitals
+* Police Stations
+* Fuel Stations
+* Towing Services
+
+Built using:
+
+* Leaflet.js
+* OpenStreetMap
+* optimized lightweight APIs
+
+---
+
+## 💾 9. Offline Rescue Mode
+
+Rakshak AI supports offline micro-maps.
+
+### Features:
+
+* Offline emergency radius download
+* Local map caching
+* Dead-zone accessibility
+* Nearby rescue discovery without internet
+
+Powered using:
+
+* IndexedDB
+* Service Workers
+* PWA caching
+* OpenStreetMap tile storage
+
+---
+
+## 🤖 10. Rakshak AI Intelligence Layer
+
+A lightweight AI-inspired safety engine.
+
+### AI Capabilities:
+
+* Risk scoring
+* Smart emergency suggestions
+* Isolation analysis
+* Connectivity warnings
+* Emergency prioritization
+
+### Example:
+
+* “You are entering a low network zone.”
+* “Nearest trauma center is 2.1km away.”
+* “Consider sharing live trip with guardian.”
+
+---
+
+# 📱 UI/UX Philosophy
+
+Rakshak AI is designed for:
+
+* panic situations,
+* low-end Android devices,
+* low internet regions,
+* and high-speed emergency interaction.
+
+### UX Principles:
+
+* Zero login walls
+* Zero typing during emergencies
+* Mobile-first design
+* Large thumb-friendly controls
+* Dark emergency UI
+* Fast one-handed usage
+* Minimal cognitive load
+
+---
+
+# 🏗️ System Architecture
+
+| Domain          | Technology                 | Purpose                          |
+| :-------------- | :------------------------- | :------------------------------- |
+| Frontend        | React.js + Vite            | Ultra-fast responsive interface  |
+| Styling         | Tailwind CSS               | Emergency-focused modern UI      |
+| Backend         | Supabase + PostgreSQL      | Realtime emergency storage       |
+| Maps            | Leaflet.js + OpenStreetMap | Lightweight emergency GIS        |
+| Offline Storage | IndexedDB + localStorage   | Offline resilience               |
+| PWA             | Service Workers            | Offline emergency support        |
+| AI Layer        | Rule-Based Safety Engine   | Lightweight intelligent analysis |
+
+---
+
+# ⚡ Performance Optimizations
+
+Rakshak AI is optimized for:
+
+* low battery usage,
+* slow internet,
+* unstable connectivity,
+* and low-memory devices.
+
+### Techniques Used:
+
+* Debounced GPS tracking
+* Lazy route loading
+* Minimal re-renders
+* Lightweight APIs
+* Offline-first caching
+* Optimized map tile loading
+
+---
+
+# 🌍 Target Impact
+
+Rakshak AI is designed for deployment across BIMSTEC nations where:
+
+* emergency infrastructure is inconsistent,
+* rural connectivity is weak,
+* and rapid response systems are limited.
+
+The platform prioritizes:
+
+* accessibility,
+* speed,
+* reliability,
+* and offline survivability.
+
+---
+
+# 🚀 Local Development Setup
+
+## 1️⃣ Clone Repository
 
 ```bash
-# 1. Clone the repository
-git clone [https://github.com/amanjaiswal143143/RAKSHAK.git](https://github.com/amanjaiswal143143/RAKSHAK.git)
+git clone https://github.com/amanjaiswal143143/RAKSHAK.git
 cd RAKSHAK
+```
 
-# 2. Install dependencies
+---
+
+## 2️⃣ Install Dependencies
+
+```bash
 npm install
+```
 
-# 3. Configure Environment Variables
-# Create a .env file and add your Supabase credentials:
-echo "VITE_SUPABASE_URL=your_url" >> .env
-echo "VITE_SUPABASE_ANON_KEY=your_key" >> .env
+---
 
-# 4. Fire up the development server
+## 3️⃣ Configure Environment Variables
+
+Create a `.env` file:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+---
+
+## 4️⃣ Run Development Server
+
+```bash
 npm run dev
+```
+
+---
+
+# 📂 Project Structure
+
+```bash
+src/
+├── components/
+├── pages/
+├── services/
+├── hooks/
+├── maps/
+├── ai/
+├── emergency/
+├── offline/
+├── store/
+└── utils/
+```
+
+---
+
+# 🔮 Future Scope
+
+* AI accident severity estimation
+* Smart ambulance routing
+* Vehicle sensor integration
+* Government emergency APIs
+* Multi-language emergency support
+* Wearable integration
+* Crash prediction analytics
+
+---
+
+# 👨‍💻 Team Rakshak
+
+Built with a mission to reduce emergency response delays and improve road safety outcomes through accessible technology.
+
+---
+
+<div align="center">
+
+## ❤️ “Every Second Matters During the Golden Hour.”
+
+### Rakshak AI — Protecting Lives Through Intelligent Emergency Response.
+
+</div>
