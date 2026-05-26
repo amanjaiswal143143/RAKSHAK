@@ -1,200 +1,699 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { motion } from 'framer-motion';
+
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/common/Button';
-import Card from '../components/common/Card';
+
+import {
+  Shield,
+  Battery,
+  MapPin,
+  Users,
+  Phone,
+  Navigation,
+  WifiOff,
+  Brain,
+} from 'lucide-react';
+
+import EmergencyActionPanel from '../components/emergency/EmergencyActionPanel';
+
+import AIOrb from '../components/common/AIOrb';
+
 import { useAISafety } from '../hooks/useAISafety.js';
-import { riskScoreCalculator } from '../services/ai/riskScoreCalculator.js';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { safetyAnalysis, riskScore, riskLevel, suggestions } = useAISafety();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
+  const {
+    safetyAnalysis,
+    riskScore,
+    riskLevel,
+    suggestions,
+  } = useAISafety();
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: 'spring', stiffness: 300, damping: 24 }
+  const [isEmergencyPanelOpen, setIsEmergencyPanelOpen] =
+    useState(false);
+
+  const [isOnline, setIsOnline] = useState(
+    navigator.onLine
+  );
+
+  const [batteryLevel, setBatteryLevel] = useState(100);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+
+    window.addEventListener('offline', handleOffline);
+
+    if (navigator.getBattery) {
+      navigator.getBattery().then((battery) => {
+        setBatteryLevel(
+          Math.round(battery.level * 100)
+        );
+
+        battery.addEventListener(
+          'levelchange',
+          () => {
+            setBatteryLevel(
+              Math.round(battery.level * 100)
+            );
+          }
+        );
+      });
     }
-  };
+
+    return () => {
+      window.removeEventListener(
+        'online',
+        handleOnline
+      );
+
+      window.removeEventListener(
+        'offline',
+        handleOffline
+      );
+    };
+  }, []);
+
+  const quickActions = [
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      label: 'Nearby Help',
+      action: () => navigate('/nearby'),
+      gradient:
+        'from-blue-600/20 to-cyan-600/20',
+      border: 'border-cyan-500/20',
+    },
+
+    {
+      icon: <Users className="w-5 h-5" />,
+      label: 'Guardians',
+      action: () => navigate('/guardian'),
+      gradient:
+        'from-purple-600/20 to-pink-600/20',
+      border: 'border-purple-500/20',
+    },
+
+    {
+      icon: <Navigation className="w-5 h-5" />,
+      label: 'Safe Trip',
+      action: () => navigate('/guardian'),
+      gradient:
+        'from-green-600/20 to-emerald-600/20',
+      border: 'border-green-500/20',
+    },
+
+    {
+      icon: <WifiOff className="w-5 h-5" />,
+      label: 'Offline Mode',
+      action: () => navigate('/nearby'),
+      gradient:
+        'from-zinc-700/20 to-zinc-800/20',
+      border: 'border-zinc-500/20',
+    },
+  ];
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="min-h-screen bg-background pb-24 safe-area-top"
-    >
-      {/* Header */}
-      <motion.div variants={itemVariants} className="p-6">
-        <h1 className="text-4xl font-bold text-white mb-2">
-          Rakshak <span className="text-neonRed text-glow">AI</span>
-        </h1>
-        <p className="text-gray-400">Your Emergency Response Companion</p>
-      </motion.div>
+    <div className="min-h-screen bg-black text-white pb-28 overflow-hidden relative">
 
-      {/* AI Safety Score */}
-      {safetyAnalysis && (
-        <motion.div variants={itemVariants} className="px-6 mb-6">
-          <Card className={`border-l-4 ${
-            riskLevel === 'critical' ? 'border-red-600' :
-            riskLevel === 'high' ? 'border-orange-500' :
-            riskLevel === 'medium' ? 'border-yellow-500' :
-            'border-neonGreen'
-          }`}>
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <p className="text-sm text-gray-400 mb-1">AI Safety Score</p>
-                <p className="text-3xl font-bold text-white">
-                  {riskScore}/100
-                  <span className="text-lg ml-2">
-                    {riskScoreCalculator.getRiskLevelIcon(riskLevel)}
-                  </span>
+      {/* Background Glow */}
+
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-red-600/10 blur-[140px]" />
+
+      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-cyan-600/10 blur-[120px]" />
+
+      <div className="absolute top-1/3 left-0 w-[250px] h-[250px] bg-purple-600/10 blur-[100px]" />
+
+      {/* Header */}
+
+      <div className="relative z-10 px-6 pt-8">
+
+        <div className="flex items-center justify-between">
+
+          <div>
+            <h1 className="text-4xl font-black tracking-tight">
+              Rakshak{' '}
+              <span className="text-red-500">
+                AI
+              </span>
+            </h1>
+
+            <p className="text-gray-400 mt-1 text-sm">
+              Emergency Protection System
+            </p>
+          </div>
+
+          {/* Online Status */}
+
+          <div
+            className={`px-4 py-2 rounded-full border backdrop-blur-xl ${
+              isOnline
+                ? 'bg-green-500/10 border-green-500/20'
+                : 'bg-red-500/10 border-red-500/20'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+
+              <div
+                className={`w-2 h-2 rounded-full animate-pulse ${
+                  isOnline
+                    ? 'bg-green-500'
+                    : 'bg-red-500'
+                }`}
+              />
+
+              <span className="text-xs font-medium">
+                {isOnline
+                  ? 'Online'
+                  : 'Offline'}
+              </span>
+
+            </div>
+          </div>
+        </div>
+
+        {/* Heartbeat */}
+
+        <div className="mt-5 h-[2px] rounded-full overflow-hidden bg-white/5">
+
+          <motion.div
+            animate={{
+              x: ['-100%', '100%'],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+            className="h-full w-40 bg-gradient-to-r from-transparent via-red-500 to-transparent"
+          />
+
+        </div>
+      </div>
+
+      {/* Hero Section */}
+
+      <div className="relative z-10 px-6 mt-8">
+
+        <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-6">
+
+          <div className="absolute top-0 right-0 w-40 h-40 bg-red-500/10 blur-3xl rounded-full" />
+
+          <div className="flex items-center justify-between">
+
+            <div className="flex-1">
+
+              <div className="flex items-center gap-2 mb-3">
+
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+
+                <p className="text-green-400 text-sm font-medium">
+                  AI Monitoring Active
                 </p>
+
               </div>
-              <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                riskLevel === 'critical' ? 'bg-red-600 text-white' :
-                riskLevel === 'high' ? 'bg-orange-500 text-white' :
-                riskLevel === 'medium' ? 'bg-yellow-500 text-black' :
-                'bg-neonGreen text-black'
-              }`}>
+
+              <h2 className="text-3xl font-bold leading-tight">
+                Your Intelligent
+
+                <span className="block text-red-500">
+                  Safety Guardian
+                </span>
+              </h2>
+
+              <p className="text-gray-400 text-sm mt-4 leading-relaxed max-w-xs">
+                AI-powered emergency assistance,
+                offline rescue support, and
+                real-time protection during
+                critical situations.
+              </p>
+
+              {/* Hero Buttons */}
+
+              <div className="flex gap-3 mt-5">
+
+                <button
+                  onClick={() =>
+                    navigate('/ai-chat')
+                  }
+                  className="
+                    px-5
+                    py-3
+                    rounded-2xl
+                    bg-cyan-500/10
+                    border
+                    border-cyan-500/20
+                    text-cyan-400
+                    font-medium
+                    backdrop-blur-xl
+                  "
+                >
+                  Talk To AI
+                </button>
+
+                <button
+                  onClick={() =>
+                    navigate('/guardian')
+                  }
+                  className="
+                    px-5
+                    py-3
+                    rounded-2xl
+                    bg-purple-500/10
+                    border
+                    border-purple-500/20
+                    text-purple-300
+                    font-medium
+                    backdrop-blur-xl
+                  "
+                >
+                  Guardians
+                </button>
+
+              </div>
+
+              {/* Stats */}
+
+              <div className="flex gap-3 mt-5">
+
+                <div className="px-4 py-3 rounded-2xl bg-white/5 border border-white/10">
+
+                  <p className="text-xs text-gray-400">
+                    Response
+                  </p>
+
+                  <p className="text-white font-bold">
+                    2.1s
+                  </p>
+
+                </div>
+
+                <div className="px-4 py-3 rounded-2xl bg-white/5 border border-white/10">
+
+                  <p className="text-xs text-gray-400">
+                    Safety
+                  </p>
+
+                  <p className="text-green-400 font-bold">
+                    Active
+                  </p>
+
+                </div>
+
+              </div>
+            </div>
+
+            <div className="ml-4">
+              <AIOrb />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* AI SCORE */}
+
+      {safetyAnalysis && (
+        <div className="relative z-10 px-6 mt-6">
+
+          <div className="rounded-[28px] bg-white/[0.04] border border-white/10 backdrop-blur-2xl p-5">
+
+            <div className="flex items-center justify-between mb-4">
+
+              <div className="flex gap-3 items-center">
+
+                <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
+                  <Brain className="w-6 h-6 text-cyan-400" />
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-400">
+                    AI Safety Score
+                  </p>
+
+                  <h2 className="text-3xl font-bold">
+                    {riskScore}/100
+                  </h2>
+                </div>
+              </div>
+
+              <div
+                className={`px-4 py-2 rounded-full text-xs font-bold ${
+                  riskLevel === 'critical'
+                    ? 'bg-red-500/20 text-red-400'
+                    : riskLevel === 'high'
+                    ? 'bg-orange-500/20 text-orange-400'
+                    : riskLevel === 'medium'
+                    ? 'bg-yellow-500/20 text-yellow-400'
+                    : 'bg-green-500/20 text-green-400'
+                }`}
+              >
                 {riskLevel.toUpperCase()}
               </div>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all duration-500 ${
-                  riskLevel === 'critical' ? 'bg-red-600' :
-                  riskLevel === 'high' ? 'bg-orange-500' :
-                  riskLevel === 'medium' ? 'bg-yellow-500' :
-                  'bg-neonGreen'
-                }`}
-                style={{ width: `${riskScore}%` }}
+
+            {/* Progress */}
+
+            <div className="h-3 rounded-full overflow-hidden bg-white/5">
+
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{
+                  width: `${riskScore}%`,
+                }}
+                transition={{
+                  duration: 1,
+                }}
+                className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
               />
+
             </div>
-          </Card>
-        </motion.div>
+          </div>
+        </div>
       )}
 
-      {/* AI Suggestions */}
-      {suggestions && suggestions.length > 0 && (
-        <motion.div variants={itemVariants} className="px-6 mb-6">
-          <h2 className="text-lg font-semibold text-white mb-3">AI Suggestions</h2>
-          <div className="space-y-2">
-            {suggestions.slice(0, 3).map((suggestion, index) => (
-              <Card key={index} className={`border-l-4 ${
-                suggestion.priority === 'critical' ? 'border-red-600' :
-                suggestion.priority === 'high' ? 'border-orange-500' :
-                suggestion.priority === 'medium' ? 'border-yellow-500' :
-                'border-neonBlue'
-              }`}>
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl">{suggestion.icon}</div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm">{suggestion.message}</p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </motion.div>
-      )}
+      {/* SOS */}
 
-      {/* Emergency Status Card */}
-      <motion.div variants={itemVariants} className="px-6 mb-6">
-        <Card className="border-l-4 border-emergency">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-400 mb-1">System Status</p>
-              <p className="text-xl font-bold text-neonGreen">● Online</p>
-            </div>
-            <div className="text-4xl animate-pulse-slow">🛡️</div>
-          </div>
-        </Card>
-      </motion.div>
+      <div className="relative z-10 flex justify-center mt-10">
+
+        <div className="relative">
+
+          {/* Glow */}
+
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.4, 0.8, 0.4],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+            }}
+            className="absolute inset-0 rounded-full bg-red-500 blur-[80px]"
+          />
+
+          {/* Button */}
+
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            onClick={() =>
+              setIsEmergencyPanelOpen(true)
+            }
+            className="
+              relative
+              w-56
+              h-56
+              rounded-full
+              bg-gradient-to-br
+              from-red-500
+              via-red-600
+              to-red-800
+              flex
+              flex-col
+              items-center
+              justify-center
+              overflow-hidden
+              border
+              border-red-400/30
+              shadow-[0_0_90px_rgba(239,68,68,0.45)]
+            "
+          >
+
+            <motion.div
+              animate={{
+                rotate: 360,
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+              className="absolute inset-3 rounded-full border border-white/10"
+            />
+
+            <Phone className="w-14 h-14 text-white mb-3" />
+
+            <h2 className="text-3xl font-black tracking-widest">
+              SOS
+            </h2>
+
+            <p className="text-xs text-white/80 mt-1">
+              Emergency Help
+            </p>
+
+          </motion.button>
+        </div>
+      </div>
 
       {/* Quick Actions */}
-      <motion.div variants={itemVariants} className="px-6 mb-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+
+      <div className="relative z-10 px-6 mt-10">
+
+        <h2 className="text-xl font-bold mb-5">
+          Quick Actions
+        </h2>
+
         <div className="grid grid-cols-2 gap-4">
-          <Card hover onClick={() => navigate('/sos')} className="text-center py-8">
-            <div className="text-5xl mb-3">🆘</div>
-            <p className="font-semibold text-emergency">SOS</p>
-          </Card>
-          <Card hover onClick={() => navigate('/emergency')} className="text-center py-8">
-            <div className="text-5xl mb-3">🚨</div>
-            <p className="font-semibold">Emergency</p>
-          </Card>
-          <Card hover onClick={() => navigate('/nearby')} className="text-center py-8">
-            <div className="text-5xl mb-3">📍</div>
-            <p className="font-semibold">Nearby Help</p>
-          </Card>
-          <Card hover onClick={() => navigate('/guardian')} className="text-center py-8">
-            <div className="text-5xl mb-3">🛡️</div>
-            <p className="font-semibold">Guardian</p>
-          </Card>
+
+          {quickActions.map((action, index) => (
+
+            <motion.button
+              key={index}
+              whileTap={{ scale: 0.96 }}
+              whileHover={{
+                scale: 1.02,
+              }}
+              onClick={action.action}
+              className={`
+                relative
+                overflow-hidden
+                rounded-3xl
+                p-5
+                text-left
+                border
+                ${action.border}
+                bg-gradient-to-br
+                ${action.gradient}
+                backdrop-blur-2xl
+                transition-all
+                duration-300
+              `}
+            >
+
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+                {action.icon}
+              </div>
+
+              <p className="font-semibold text-white">
+                {action.label}
+              </p>
+
+            </motion.button>
+
+          ))}
+
         </div>
-      </motion.div>
+      </div>
 
-      {/* Emergency Contacts */}
-      <motion.div variants={itemVariants} className="px-6 mb-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Emergency Contacts</h2>
-        <Card className="space-y-3">
-          <div className="flex items-center justify-between py-2 border-b border-glassBorder">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">👮</span>
-              <div>
-                <p className="font-semibold">Police</p>
-                <p className="text-sm text-gray-400">100</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm">Call</Button>
-          </div>
-          <div className="flex items-center justify-between py-2 border-b border-glassBorder">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🚑</span>
-              <div>
-                <p className="font-semibold">Ambulance</p>
-                <p className="text-sm text-gray-400">108</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm">Call</Button>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">🔥</span>
-              <div>
-                <p className="font-semibold">Fire</p>
-                <p className="text-sm text-gray-400">101</p>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm">Call</Button>
-          </div>
-        </Card>
-      </motion.div>
+      {/* AI Suggestions */}
 
-      {/* Safety Tips */}
-      <motion.div variants={itemVariants} className="px-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Safety Tips</h2>
-        <Card className="bg-gradient-to-r from-surface to-surfaceLight">
-          <p className="text-gray-300 text-sm leading-relaxed">
-            In case of emergency, stay calm. Use the SOS button for immediate assistance. 
-            Your location will be shared with emergency services automatically.
-          </p>
-        </Card>
-      </motion.div>
-    </motion.div>
+      {suggestions &&
+        suggestions.length > 0 && (
+          <div className="relative z-10 px-6 mt-10">
+
+            <div className="flex items-center justify-between mb-5">
+
+              <h2 className="text-xl font-bold">
+                AI Insights
+              </h2>
+
+              <button
+                onClick={() =>
+                  navigate('/ai-chat')
+                }
+                className="text-cyan-400 text-sm"
+              >
+                Open AI →
+              </button>
+
+            </div>
+
+            <div className="space-y-4">
+
+              {suggestions
+                .slice(0, 2)
+                .map((suggestion, index) => (
+
+                  <motion.div
+                    key={index}
+                    initial={{
+                      opacity: 0,
+                      y: 20,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    className="
+                      rounded-3xl
+                      bg-white/[0.04]
+                      border
+                      border-white/10
+                      backdrop-blur-2xl
+                      p-5
+                    "
+                  >
+
+                    <div className="flex gap-4">
+
+                      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl">
+                        {suggestion.icon}
+                      </div>
+
+                      <div>
+                        <p className="text-white leading-relaxed">
+                          {suggestion.message}
+                        </p>
+                      </div>
+
+                    </div>
+                  </motion.div>
+
+                ))}
+
+            </div>
+          </div>
+        )}
+
+      {/* Status Cards */}
+
+      <div className="relative z-10 px-6 mt-10">
+
+        <div className="grid grid-cols-2 gap-4">
+
+          <div
+            onClick={() =>
+              navigate('/guardian')
+            }
+            className="
+              rounded-3xl
+              bg-white/[0.04]
+              border
+              border-white/10
+              backdrop-blur-2xl
+              p-5
+              cursor-pointer
+            "
+          >
+
+            <div className="flex items-center gap-2 mb-3">
+
+              <Shield className="w-5 h-5 text-purple-400" />
+
+              <span className="text-gray-400 text-sm">
+                Guardians
+              </span>
+
+            </div>
+
+            <p className="text-white font-bold text-lg">
+              Active
+            </p>
+
+          </div>
+
+          <div
+            className="
+              rounded-3xl
+              bg-white/[0.04]
+              border
+              border-white/10
+              backdrop-blur-2xl
+              p-5
+            "
+          >
+
+            <div className="flex items-center gap-2 mb-3">
+
+              <Battery className="w-5 h-5 text-green-400" />
+
+              <span className="text-gray-400 text-sm">
+                Battery
+              </span>
+
+            </div>
+
+            <p className="text-white font-bold text-lg">
+              {batteryLevel}%
+            </p>
+
+          </div>
+        </div>
+      </div>
+
+      {/* Floating AI Button */}
+
+      <motion.button
+        initial={{
+          opacity: 0,
+          y: 40,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        whileTap={{
+          scale: 0.92,
+        }}
+        onClick={() =>
+          navigate('/ai-chat')
+        }
+        className="
+          fixed
+          bottom-32
+          right-5
+          z-50
+          w-16
+          h-16
+          rounded-full
+          bg-gradient-to-br
+          from-cyan-400
+          to-blue-600
+          shadow-[0_0_40px_rgba(34,211,238,0.45)]
+          flex
+          items-center
+          justify-center
+          text-white
+        "
+      >
+
+        <motion.div
+          animate={{
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+        >
+          <Brain className="w-7 h-7" />
+        </motion.div>
+
+      </motion.button>
+
+      {/* Emergency Panel */}
+
+      <EmergencyActionPanel
+        isOpen={isEmergencyPanelOpen}
+        onClose={() =>
+          setIsEmergencyPanelOpen(false)
+        }
+      />
+    </div>
   );
 };
 

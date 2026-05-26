@@ -2,6 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+
+import 'leaflet/dist/leaflet.css';
 
 const Nearby = () => {
   const containerVariants = {
@@ -48,15 +51,47 @@ const Nearby = () => {
       </motion.div>
 
       {/* Map Placeholder */}
-      <motion.div variants={itemVariants} className="px-6 mb-6">
-        <Card className="h-48 flex items-center justify-center bg-surface">
-          <div className="text-center">
-            <div className="text-5xl mb-2">🗺️</div>
-            <p className="text-gray-400 text-sm">Interactive Map</p>
-            <p className="text-gray-500 text-xs mt-1">Coming Soon</p>
-          </div>
-        </Card>
-      </motion.div>
+      <div className="h-[300px] rounded-3xl overflow-hidden border border-zinc-800 mb-6">
+
+  <MapContainer
+    center={[21.1702, 72.8311]}
+    zoom={13}
+    scrollWheelZoom={true}
+    className="h-full w-full z-0"
+  >
+
+    <TileLayer
+      attribution='&copy; OpenStreetMap contributors'
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+
+    {/* Hospital */}
+
+    <Marker position={[21.1702, 72.8311]}>
+      <Popup>
+        City Hospital 🚑
+      </Popup>
+    </Marker>
+
+    {/* Police */}
+
+    <Marker position={[21.1802, 72.8211]}>
+      <Popup>
+        Police Station 👮
+      </Popup>
+    </Marker>
+
+    {/* Fire */}
+
+    <Marker position={[21.1602, 72.8411]}>
+      <Popup>
+        Fire Station 🔥
+      </Popup>
+    </Marker>
+
+  </MapContainer>
+
+</div>
 
       {/* Filter Buttons */}
       <motion.div variants={itemVariants} className="px-6 mb-6">
