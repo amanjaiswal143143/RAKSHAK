@@ -7,7 +7,7 @@
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter\&weight=700\&size=24\&pause=1000\&color=EF4444\&center=true\&vCenter=true\&width=500\&lines=The+Silent+SOS.;Visual+Triage+Intelligence.;Last+Known+Path+Recovery.;Zero-Friction+Emergency+Response.)](https://git.io/typing-svg)
 
   <p align="center">
-    <b>Rakshak AI — The Intelligent Emergency Response & Road Safety Platform.</b><br>
+    <b>Rakshak AI — The Smart Emergency Response & Road Safety Platform.</b><br>
     <i>Built for the IIT Madras CoERS Road Safety Hackathon 2026.</i>
   </p>
 
