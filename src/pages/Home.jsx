@@ -13,6 +13,7 @@ import {
   Navigation,
   WifiOff,
   Brain,
+  LogIn,
 } from 'lucide-react';
 
 import EmergencyActionPanel from '../components/emergency/EmergencyActionPanel';
@@ -22,6 +23,7 @@ import AIOrb from '../components/common/AIOrb';
 import { useAISafety } from '../hooks/useAISafety.js';
 
 const Home = () => {
+
   const navigate = useNavigate();
 
   const {
@@ -34,39 +36,58 @@ const Home = () => {
   const [isEmergencyPanelOpen, setIsEmergencyPanelOpen] =
     useState(false);
 
-  const [isOnline, setIsOnline] = useState(
-    navigator.onLine
-  );
+  const [isOnline, setIsOnline] =
+    useState(navigator.onLine);
 
-  const [batteryLevel, setBatteryLevel] = useState(100);
+  const [batteryLevel, setBatteryLevel] =
+    useState(100);
 
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
 
-    const handleOffline = () => setIsOnline(false);
+    const handleOnline = () =>
+      setIsOnline(true);
 
-    window.addEventListener('online', handleOnline);
+    const handleOffline = () =>
+      setIsOnline(false);
 
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener(
+      'online',
+      handleOnline
+    );
+
+    window.addEventListener(
+      'offline',
+      handleOffline
+    );
 
     if (navigator.getBattery) {
-      navigator.getBattery().then((battery) => {
-        setBatteryLevel(
-          Math.round(battery.level * 100)
-        );
 
-        battery.addEventListener(
-          'levelchange',
-          () => {
-            setBatteryLevel(
-              Math.round(battery.level * 100)
-            );
-          }
-        );
-      });
+      navigator.getBattery().then(
+        (battery) => {
+
+          setBatteryLevel(
+            Math.round(
+              battery.level * 100
+            )
+          );
+
+          battery.addEventListener(
+            'levelchange',
+            () => {
+
+              setBatteryLevel(
+                Math.round(
+                  battery.level * 100
+                )
+              );
+            }
+          );
+        }
+      );
     }
 
     return () => {
+
       window.removeEventListener(
         'online',
         handleOnline
@@ -77,6 +98,7 @@ const Home = () => {
         handleOffline
       );
     };
+
   }, []);
 
   const quickActions = [
@@ -86,41 +108,53 @@ const Home = () => {
       action: () => navigate('/nearby'),
       gradient:
         'from-blue-600/20 to-cyan-600/20',
-      border: 'border-cyan-500/20',
+      border:
+        'border-cyan-500/20',
     },
 
     {
       icon: <Users className="w-5 h-5" />,
       label: 'Guardians',
-      action: () => navigate('/guardian'),
+      action: () =>
+        navigate('/guardian'),
       gradient:
         'from-purple-600/20 to-pink-600/20',
-      border: 'border-purple-500/20',
+      border:
+        'border-purple-500/20',
     },
 
     {
-      icon: <Navigation className="w-5 h-5" />,
+      icon: (
+        <Navigation className="w-5 h-5" />
+      ),
       label: 'Safe Trip',
-      action: () => navigate('/guardian'),
+      action: () =>
+        navigate('/guardian'),
       gradient:
         'from-green-600/20 to-emerald-600/20',
-      border: 'border-green-500/20',
+      border:
+        'border-green-500/20',
     },
 
     {
-      icon: <WifiOff className="w-5 h-5" />,
+      icon: (
+        <WifiOff className="w-5 h-5" />
+      ),
       label: 'Offline Mode',
-      action: () => navigate('/nearby'),
+      action: () =>
+        navigate('/nearby'),
       gradient:
         'from-zinc-700/20 to-zinc-800/20',
-      border: 'border-zinc-500/20',
+      border:
+        'border-zinc-500/20',
     },
   ];
 
   return (
+
     <div className="min-h-screen bg-black text-white pb-28 overflow-hidden relative">
 
-      {/* Background Glow */}
+      {/* BACKGROUND GLOW */}
 
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-red-600/10 blur-[140px]" />
 
@@ -128,26 +162,31 @@ const Home = () => {
 
       <div className="absolute top-1/3 left-0 w-[250px] h-[250px] bg-purple-600/10 blur-[100px]" />
 
-      {/* Header */}
+      {/* HEADER */}
 
       <div className="relative z-10 px-6 pt-8">
 
         <div className="flex items-center justify-between">
 
           <div>
+
             <h1 className="text-4xl font-black tracking-tight">
+
               Rakshak{' '}
+
               <span className="text-red-500">
                 AI
               </span>
+
             </h1>
 
             <p className="text-gray-400 mt-1 text-sm">
               Emergency Protection System
             </p>
+
           </div>
 
-          {/* Online Status */}
+          {/* ONLINE STATUS */}
 
           <div
             className={`px-4 py-2 rounded-full border backdrop-blur-xl ${
@@ -156,6 +195,7 @@ const Home = () => {
                 : 'bg-red-500/10 border-red-500/20'
             }`}
           >
+
             <div className="flex items-center gap-2">
 
               <div
@@ -167,16 +207,20 @@ const Home = () => {
               />
 
               <span className="text-xs font-medium">
+
                 {isOnline
                   ? 'Online'
                   : 'Offline'}
+
               </span>
 
             </div>
+
           </div>
+
         </div>
 
-        {/* Heartbeat */}
+        {/* HEARTBEAT */}
 
         <div className="mt-5 h-[2px] rounded-full overflow-hidden bg-white/5">
 
@@ -193,9 +237,10 @@ const Home = () => {
           />
 
         </div>
+
       </div>
 
-      {/* Hero Section */}
+      {/* HERO */}
 
       <div className="relative z-10 px-6 mt-8">
 
@@ -218,23 +263,27 @@ const Home = () => {
               </div>
 
               <h2 className="text-3xl font-bold leading-tight">
+
                 Your Intelligent
 
                 <span className="block text-red-500">
                   Safety Guardian
                 </span>
+
               </h2>
 
               <p className="text-gray-400 text-sm mt-4 leading-relaxed max-w-xs">
+
                 AI-powered emergency assistance,
                 offline rescue support, and
                 real-time protection during
                 critical situations.
+
               </p>
 
-              {/* Hero Buttons */}
+              {/* HERO BUTTONS */}
 
-              <div className="flex gap-3 mt-5">
+              <div className="flex gap-3 mt-5 flex-wrap">
 
                 <button
                   onClick={() =>
@@ -252,7 +301,9 @@ const Home = () => {
                     backdrop-blur-xl
                   "
                 >
+
                   Talk To AI
+
                 </button>
 
                 <button
@@ -271,12 +322,40 @@ const Home = () => {
                     backdrop-blur-xl
                   "
                 >
+
                   Guardians
+
+                </button>
+
+                <button
+                  onClick={() =>
+                    navigate('/auth')
+                  }
+                  className="
+                    flex
+                    items-center
+                    gap-2
+                    px-5
+                    py-3
+                    rounded-2xl
+                    bg-green-500/10
+                    border
+                    border-green-500/20
+                    text-green-400
+                    font-medium
+                    backdrop-blur-xl
+                  "
+                >
+
+                  <LogIn className="w-4 h-4" />
+
+                  Sign In
+
                 </button>
 
               </div>
 
-              {/* Stats */}
+              {/* STATS */}
 
               <div className="flex gap-3 mt-5">
 
@@ -305,151 +384,22 @@ const Home = () => {
                 </div>
 
               </div>
+
             </div>
 
             <div className="ml-4">
+
               <AIOrb />
+
             </div>
+
           </div>
+
         </div>
+
       </div>
 
-      {/* AI SCORE */}
-
-      {safetyAnalysis && (
-        <div className="relative z-10 px-6 mt-6">
-
-          <div className="rounded-[28px] bg-white/[0.04] border border-white/10 backdrop-blur-2xl p-5">
-
-            <div className="flex items-center justify-between mb-4">
-
-              <div className="flex gap-3 items-center">
-
-                <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-cyan-400" />
-                </div>
-
-                <div>
-                  <p className="text-xs text-gray-400">
-                    AI Safety Score
-                  </p>
-
-                  <h2 className="text-3xl font-bold">
-                    {riskScore}/100
-                  </h2>
-                </div>
-              </div>
-
-              <div
-                className={`px-4 py-2 rounded-full text-xs font-bold ${
-                  riskLevel === 'critical'
-                    ? 'bg-red-500/20 text-red-400'
-                    : riskLevel === 'high'
-                    ? 'bg-orange-500/20 text-orange-400'
-                    : riskLevel === 'medium'
-                    ? 'bg-yellow-500/20 text-yellow-400'
-                    : 'bg-green-500/20 text-green-400'
-                }`}
-              >
-                {riskLevel.toUpperCase()}
-              </div>
-            </div>
-
-            {/* Progress */}
-
-            <div className="h-3 rounded-full overflow-hidden bg-white/5">
-
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{
-                  width: `${riskScore}%`,
-                }}
-                transition={{
-                  duration: 1,
-                }}
-                className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
-              />
-
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* SOS */}
-
-      <div className="relative z-10 flex justify-center mt-10">
-
-        <div className="relative">
-
-          {/* Glow */}
-
-          <motion.div
-            animate={{
-              scale: [1, 1.15, 1],
-              opacity: [0.4, 0.8, 0.4],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-            }}
-            className="absolute inset-0 rounded-full bg-red-500 blur-[80px]"
-          />
-
-          {/* Button */}
-
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.03 }}
-            onClick={() =>
-              setIsEmergencyPanelOpen(true)
-            }
-            className="
-              relative
-              w-56
-              h-56
-              rounded-full
-              bg-gradient-to-br
-              from-red-500
-              via-red-600
-              to-red-800
-              flex
-              flex-col
-              items-center
-              justify-center
-              overflow-hidden
-              border
-              border-red-400/30
-              shadow-[0_0_90px_rgba(239,68,68,0.45)]
-            "
-          >
-
-            <motion.div
-              animate={{
-                rotate: 360,
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: 'linear',
-              }}
-              className="absolute inset-3 rounded-full border border-white/10"
-            />
-
-            <Phone className="w-14 h-14 text-white mb-3" />
-
-            <h2 className="text-3xl font-black tracking-widest">
-              SOS
-            </h2>
-
-            <p className="text-xs text-white/80 mt-1">
-              Emergency Help
-            </p>
-
-          </motion.button>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
+      {/* QUICK ACTIONS */}
 
       <div className="relative z-10 px-6 mt-10">
 
@@ -459,117 +409,102 @@ const Home = () => {
 
         <div className="grid grid-cols-2 gap-4">
 
-          {quickActions.map((action, index) => (
+          {quickActions.map(
+            (action, index) => (
 
-            <motion.button
-              key={index}
-              whileTap={{ scale: 0.96 }}
-              whileHover={{
-                scale: 1.02,
-              }}
-              onClick={action.action}
-              className={`
-                relative
-                overflow-hidden
-                rounded-3xl
-                p-5
-                text-left
-                border
-                ${action.border}
-                bg-gradient-to-br
-                ${action.gradient}
-                backdrop-blur-2xl
-                transition-all
-                duration-300
-              `}
-            >
+              <motion.button
+                key={index}
+                whileTap={{
+                  scale: 0.96,
+                }}
+                whileHover={{
+                  scale: 1.02,
+                }}
+                onClick={action.action}
+                className={`
+                  relative
+                  overflow-hidden
+                  rounded-3xl
+                  p-5
+                  text-left
+                  border
+                  ${action.border}
+                  bg-gradient-to-br
+                  ${action.gradient}
+                  backdrop-blur-2xl
+                `}
+              >
 
-              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
-                {action.icon}
-              </div>
+                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
 
-              <p className="font-semibold text-white">
-                {action.label}
-              </p>
+                  {action.icon}
 
-            </motion.button>
+                </div>
 
-          ))}
+                <p className="font-semibold text-white">
+
+                  {action.label}
+
+                </p>
+
+              </motion.button>
+
+            )
+          )}
 
         </div>
+
       </div>
 
-      {/* AI Suggestions */}
+      {/* SOS BUTTON */}
 
-      {suggestions &&
-        suggestions.length > 0 && (
-          <div className="relative z-10 px-6 mt-10">
+      <div className="relative z-10 flex justify-center mt-12">
 
-            <div className="flex items-center justify-between mb-5">
+        <motion.button
+          whileTap={{
+            scale: 0.95,
+          }}
+          onClick={() =>
+            setIsEmergencyPanelOpen(true)
+          }
+          className="
+            relative
+            w-56
+            h-56
+            rounded-full
+            bg-gradient-to-br
+            from-red-500
+            via-red-600
+            to-red-800
+            flex
+            flex-col
+            items-center
+            justify-center
+            border
+            border-red-400/30
+            shadow-[0_0_90px_rgba(239,68,68,0.45)]
+          "
+        >
 
-              <h2 className="text-xl font-bold">
-                AI Insights
-              </h2>
+          <Phone className="w-14 h-14 text-white mb-3" />
 
-              <button
-                onClick={() =>
-                  navigate('/ai-chat')
-                }
-                className="text-cyan-400 text-sm"
-              >
-                Open AI →
-              </button>
+          <h2 className="text-3xl font-black tracking-widest">
 
-            </div>
+            SOS
 
-            <div className="space-y-4">
+          </h2>
 
-              {suggestions
-                .slice(0, 2)
-                .map((suggestion, index) => (
+          <p className="text-xs text-white/80 mt-1">
 
-                  <motion.div
-                    key={index}
-                    initial={{
-                      opacity: 0,
-                      y: 20,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    className="
-                      rounded-3xl
-                      bg-white/[0.04]
-                      border
-                      border-white/10
-                      backdrop-blur-2xl
-                      p-5
-                    "
-                  >
+            Emergency Help
 
-                    <div className="flex gap-4">
+          </p>
 
-                      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl">
-                        {suggestion.icon}
-                      </div>
+        </motion.button>
 
-                      <div>
-                        <p className="text-white leading-relaxed">
-                          {suggestion.message}
-                        </p>
-                      </div>
+      </div>
 
-                    </div>
-                  </motion.div>
-
-                ))}
-
-            </div>
-          </div>
-        )}
-
-      {/* Status Cards */}
+      {/* STATUS */}
 
       <div className="relative z-10 px-6 mt-10">
 
@@ -595,13 +530,17 @@ const Home = () => {
               <Shield className="w-5 h-5 text-purple-400" />
 
               <span className="text-gray-400 text-sm">
+
                 Guardians
+
               </span>
 
             </div>
 
             <p className="text-white font-bold text-lg">
+
               Active
+
             </p>
 
           </div>
@@ -622,20 +561,26 @@ const Home = () => {
               <Battery className="w-5 h-5 text-green-400" />
 
               <span className="text-gray-400 text-sm">
+
                 Battery
+
               </span>
 
             </div>
 
             <p className="text-white font-bold text-lg">
+
               {batteryLevel}%
+
             </p>
 
           </div>
+
         </div>
+
       </div>
 
-      {/* Floating AI Button */}
+      {/* FLOATING AI */}
 
       <motion.button
         initial={{
@@ -680,12 +625,14 @@ const Home = () => {
             repeat: Infinity,
           }}
         >
+
           <Brain className="w-7 h-7" />
+
         </motion.div>
 
       </motion.button>
 
-      {/* Emergency Panel */}
+      {/* EMERGENCY PANEL */}
 
       <EmergencyActionPanel
         isOpen={isEmergencyPanelOpen}
@@ -693,6 +640,7 @@ const Home = () => {
           setIsEmergencyPanelOpen(false)
         }
       />
+
     </div>
   );
 };
