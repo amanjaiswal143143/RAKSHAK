@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import twilio from 'twilio';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
@@ -9,8 +12,8 @@ app.use(cors());
 app.use(express.json());
 
 const client = twilio(
-  'AC30ef2b2f9b19a5557b42f9d8ef670240',
-  'b65156b95812794aabd9f51e1695e0d0'
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
 );
 
 app.post('/send-sos', async (req, res) => {
