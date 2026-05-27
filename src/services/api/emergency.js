@@ -2,7 +2,7 @@
  * Emergency Service - Handles SOS logic and Supabase integration
  */
 
-import { supabase, isSupabaseConfigured } from '../supabase/client.js';
+import { supabase, isSupabaseConfigured } from '../../supabase/client.js';
 import { locationService } from './location.js';
 import { indexedDBService } from '../offline/indexedDB.js';
 

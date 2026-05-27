@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from './supabase/client';
+import Auth from './pages/Auth';
 
 import {
   BrowserRouter as Router,
@@ -98,6 +100,16 @@ const AppRoutes = () => {
       <div className="relative z-10 pb-24">
 
         <Routes>
+
+          {/* AUTH */}
+          <Route
+            path="/auth"
+            element={
+              <AnimatedPage>
+                <Auth />
+              </AnimatedPage>
+            }
+          />
 
           {/* HOME */}
           <Route
@@ -202,18 +214,28 @@ const AppRoutes = () => {
 /* ---------------- MAIN APP ---------------- */
 
 function App() {
-  const [loading, setLoading] = useState(true);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  console.log(supabase);
 
   useEffect(() => {
+
     const timer = setTimeout(() => {
+
       setLoading(false);
+
     }, 1800);
 
     return () => clearTimeout(timer);
+
   }, []);
 
   /* SPLASH SCREEN */
+
   if (loading) {
+
     return <SplashScreen />;
   }
 

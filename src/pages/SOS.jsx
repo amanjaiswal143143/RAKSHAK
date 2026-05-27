@@ -6,26 +6,28 @@ import Card from '../components/common/Card';
 
 import CountdownModal from '../components/emergency/CountdownModal';
 
-import { useEmergency } from '../hooks/useEmergency';
-
 import { useNightMode } from '../contexts/NightModeContext';
 
 import { useMovementDetection } from '../hooks/useMovementDetection';
 
-const SOS = () => {
-  const {
-    triggerSOS,
-    loading,
-    error,
-    success,
-    emergency,
-    reset,
-  } = useEmergency();
+import { supabase } from '../supabase/client';
 
-  const { isNightMode } = useNightMode();
+const SOS = () => {
+
+  const { isNightMode } =
+    useNightMode();
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [error, setError] =
+    useState('');
 
   const [showSuccess, setShowSuccess] =
     useState(false);
+
+  const [emergencyId, setEmergencyId] =
+    useState('');
 
   const [showSafetyModal, setShowSafetyModal] =
     useState(false);
@@ -42,71 +44,176 @@ const SOS = () => {
   });
 
   useEffect(() => {
-    if (success) {
-      setShowSuccess(true);
+
+    if (showSuccess) {
 
       const timer = setTimeout(() => {
         setShowSuccess(false);
-
-        reset();
       }, 5000);
 
-      return () => clearTimeout(timer);
+      return () =>
+        clearTimeout(timer);
     }
-  }, [success, reset]);
 
-  /* SOS */
+  }, [showSuccess]);
+
+  /* ---------------- SOS ---------------- */
 
   const handleSOS = async () => {
-    try {
-      await triggerSOS({
-        type: 'SOS',
 
-        metadata: {
-          source: 'one_tap_sos',
+    setLoading(true);
+
+    setError('');
+
+    try {
+
+      navigator.geolocation.getCurrentPosition(
+
+        async (position) => {
+
+          try {
+
+            const latitude =
+              position.coords.latitude;
+
+            const longitude =
+              position.coords.longitude;
+
+            const emergencyCode =
+              crypto.randomUUID();
+
+            /* FETCH GUARDIANS */
+
+            const {
+              data: guardians,
+              error: guardianError,
+            } = await supabase
+              .from('guardians')
+              .select('*');
+
+            if (guardianError) {
+              console.log(
+                guardianError
+              );
+            }
+
+            /* SEND WHATSAPP ALERT */
+
+            await fetch(
+              'http://localhost:5000/send-sos',
+              {
+                method: 'POST',
+
+                headers: {
+                  'Content-Type':
+                    'application/json',
+                },
+
+                body: JSON.stringify({
+                  guardians,
+                  latitude,
+                  longitude,
+                }),
+              }
+            );
+
+            /* SAVE SOS */
+
+            const { error } =
+              await supabase
+                .from('sos_alerts')
+                .insert([
+                  {
+                    message:
+                      'Emergency SOS Triggered',
+
+                    latitude:
+                      latitude.toString(),
+
+                    longitude:
+                      longitude.toString(),
+                  },
+                ]);
+
+            if (error) {
+
+              setError(
+                'Failed to send SOS'
+              );
+
+              setLoading(false);
+
+              return;
+            }
+
+            setEmergencyId(
+              emergencyCode
+            );
+
+            setShowSuccess(true);
+
+            setLoading(false);
+
+          } catch (err) {
+
+            console.log(err);
+
+            setError(err.message);
+
+            setLoading(false);
+          }
         },
-      });
+
+        () => {
+
+          setError(
+            'Location permission denied'
+          );
+
+          setLoading(false);
+        }
+      );
+
     } catch (err) {
-      console.error(err);
+
+      console.log(err);
+
+      setError(err.message);
+
+      setLoading(false);
     }
   };
 
-  /* SAFE */
+  /* ---------------- SAFE ---------------- */
 
   const handleConfirmSafe = () => {
+
     setShowSafetyModal(false);
 
     resetDetection();
   };
 
-  /* AUTO SOS */
+  /* ---------------- AUTO SOS ---------------- */
 
   const handleSafetyTimeout =
     async () => {
+
       setShowSafetyModal(false);
 
-      await triggerSOS({
-        type: 'AUTO_SOS',
-
-        metadata: {
-          reason:
-            'unsafe_stop_timeout',
-
-          stopData,
-        },
-      });
+      handleSOS();
     };
 
   return (
+
     <div className="min-h-screen bg-black text-white pb-32 px-5 pt-8 relative overflow-hidden">
 
-      {/* Background Glows */}
+      {/* BACKGROUND */}
 
       <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-red-500/20 blur-[140px]" />
 
       <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-red-500/10 blur-[120px]" />
 
-      {/* Header */}
+      {/* HEADER */}
 
       <div className="text-center relative z-10">
 
@@ -120,21 +227,26 @@ const SOS = () => {
             y: 0,
           }}
         >
+
           <h1 className="text-5xl font-black tracking-tight">
+
             Emergency
+
             <span className="text-red-500">
               {' '}SOS
             </span>
+
           </h1>
 
           <p className="text-gray-400 mt-3 text-lg">
             Instant AI-powered emergency response
           </p>
+
         </motion.div>
 
       </div>
 
-      {/* AI ALERT BAR */}
+      {/* AI BANNER */}
 
       <motion.div
         initial={{
@@ -157,6 +269,7 @@ const SOS = () => {
           overflow-hidden
         "
       >
+
         <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 blur-3xl rounded-full" />
 
         <div className="relative flex items-center gap-4">
@@ -166,6 +279,7 @@ const SOS = () => {
           </div>
 
           <div>
+
             <h2 className="font-bold text-lg">
               Rakshak Emergency Shield
             </h2>
@@ -174,15 +288,19 @@ const SOS = () => {
               AI monitors emergency conditions
               and instantly alerts guardians.
             </p>
+
           </div>
 
         </div>
+
       </motion.div>
 
-      {/* Loading */}
+      {/* LOADING */}
 
       <AnimatePresence>
+
         {loading && (
+
           <motion.div
             initial={{
               opacity: 0,
@@ -226,12 +344,15 @@ const SOS = () => {
 
           </motion.div>
         )}
+
       </AnimatePresence>
 
-      {/* Success */}
+      {/* SUCCESS */}
 
       <AnimatePresence>
+
         {showSuccess && !loading && (
+
           <motion.div
             initial={{
               opacity: 0,
@@ -258,9 +379,11 @@ const SOS = () => {
               justify-center
               shadow-[0_0_90px_rgba(34,197,94,0.5)]
             ">
+
               <span className="text-8xl">
                 ✓
               </span>
+
             </div>
 
             <h2 className="text-4xl font-black text-green-400 mt-8">
@@ -271,22 +394,23 @@ const SOS = () => {
               Emergency contacts notified successfully
             </p>
 
-            {emergency && (
-              <p className="text-xs text-gray-500 mt-4">
-                Emergency ID:
-                {' '}
-                {emergency.id?.slice(0, 8)}
-              </p>
-            )}
+            <p className="text-xs text-gray-500 mt-4">
+              Emergency ID:
+              {' '}
+              {emergencyId.slice(0, 8)}
+            </p>
 
           </motion.div>
         )}
+
       </AnimatePresence>
 
-      {/* Main SOS */}
+      {/* MAIN BUTTON */}
 
       <AnimatePresence>
+
         {!loading && !showSuccess && (
+
           <motion.div
             initial={{
               opacity: 0,
@@ -298,8 +422,6 @@ const SOS = () => {
             }}
             className="flex flex-col items-center justify-center mt-20 relative z-10"
           >
-
-            {/* Pulse Rings */}
 
             <motion.div
               animate={{
@@ -329,8 +451,6 @@ const SOS = () => {
                 repeat: Infinity,
               }}
             >
-
-              {/* SOS BUTTON */}
 
               <motion.button
                 whileTap={{
@@ -383,12 +503,15 @@ const SOS = () => {
 
           </motion.div>
         )}
+
       </AnimatePresence>
 
-      {/* Error */}
+      {/* ERROR */}
 
       <AnimatePresence>
+
         {error && (
+
           <motion.div
             initial={{
               opacity: 0,
@@ -400,7 +523,9 @@ const SOS = () => {
             }}
             className="mt-10"
           >
+
             <Card className="border border-red-500/30 bg-red-500/10 rounded-3xl">
+
               <p className="text-red-400 font-bold">
                 Error Sending SOS
               </p>
@@ -408,17 +533,22 @@ const SOS = () => {
               <p className="text-sm text-gray-300 mt-2">
                 {error}
               </p>
+
             </Card>
+
           </motion.div>
         )}
+
       </AnimatePresence>
 
-      {/* Info Cards */}
+      {/* INFO CARDS */}
 
       {!isNightMode && (
+
         <div className="space-y-4 mt-20">
 
           <Card className="bg-white/5 border border-cyan-500/20 rounded-3xl">
+
             <div className="flex items-center gap-4">
 
               <div className="text-4xl">
@@ -426,6 +556,7 @@ const SOS = () => {
               </div>
 
               <div>
+
                 <p className="text-gray-400 text-sm">
                   Live Location
                 </p>
@@ -433,12 +564,15 @@ const SOS = () => {
                 <p className="font-bold">
                   Shared automatically
                 </p>
+
               </div>
 
             </div>
+
           </Card>
 
           <Card className="bg-white/5 border border-green-500/20 rounded-3xl">
+
             <div className="flex items-center gap-4">
 
               <div className="text-4xl">
@@ -446,6 +580,7 @@ const SOS = () => {
               </div>
 
               <div>
+
                 <p className="text-gray-400 text-sm">
                   Guardians
                 </p>
@@ -453,12 +588,15 @@ const SOS = () => {
                 <p className="font-bold">
                   Emergency contacts notified
                 </p>
+
               </div>
 
             </div>
+
           </Card>
 
           <Card className="bg-white/5 border border-red-500/20 rounded-3xl">
+
             <div className="flex items-center gap-4">
 
               <div className="text-4xl">
@@ -466,6 +604,7 @@ const SOS = () => {
               </div>
 
               <div>
+
                 <p className="text-gray-400 text-sm">
                   Response System
                 </p>
@@ -473,9 +612,11 @@ const SOS = () => {
                 <p className="font-bold">
                   Nearby emergency services alerted
                 </p>
+
               </div>
 
             </div>
+
           </Card>
 
         </div>
@@ -484,6 +625,7 @@ const SOS = () => {
       {/* NIGHT MODE */}
 
       {isNightMode && (
+
         <div className="mt-16">
 
           <Card className="bg-red-500/10 border border-red-500/20 rounded-3xl">
@@ -495,6 +637,7 @@ const SOS = () => {
               </div>
 
               <div>
+
                 <p className="text-red-400 font-bold">
                   Night Safety Mode
                 </p>
@@ -502,6 +645,7 @@ const SOS = () => {
                 <p className="text-sm text-gray-400 mt-1">
                   Emergency optimized interface active
                 </p>
+
               </div>
 
             </div>
@@ -522,6 +666,7 @@ const SOS = () => {
         onTimeout={handleSafetyTimeout}
         countdownSeconds={30}
       />
+
     </div>
   );
 };
