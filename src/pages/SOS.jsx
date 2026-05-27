@@ -100,7 +100,7 @@ const SOS = () => {
             /* SEND WHATSAPP ALERT */
 
             await fetch(
-              'http://localhost:5000/send-sos',
+              'https://rakshak-backend-7t7e.onrender.com',
               {
                 method: 'POST',
 
