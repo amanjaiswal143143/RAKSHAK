@@ -13,7 +13,6 @@ import {
   Navigation,
   WifiOff,
   Brain,
-  LogOut,
 } from 'lucide-react';
 
 import { supabase }
@@ -116,6 +115,7 @@ const Home = () => {
     };
 
   const quickActions = [
+
     {
       icon: <MapPin className="w-5 h-5" />,
       label: 'Nearby Help',
@@ -162,6 +162,71 @@ const Home = () => {
       border:
         'border-zinc-500/20',
     },
+
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      label: 'Towing Help',
+
+      action: () =>
+        window.open(
+          'https://www.google.com/maps/search/towing+service+near+me'
+        ),
+
+      gradient:
+        'from-yellow-600/20 to-orange-600/20',
+
+      border:
+        'border-yellow-500/20',
+    },
+
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      label: 'Puncture Shop',
+
+      action: () =>
+        window.open(
+          'https://www.google.com/maps/search/puncture+shop+near+me'
+        ),
+
+      gradient:
+        'from-orange-600/20 to-red-600/20',
+
+      border:
+        'border-orange-500/20',
+    },
+
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      label: 'Mechanic',
+
+      action: () =>
+        window.open(
+          'https://www.google.com/maps/search/mechanic+near+me'
+        ),
+
+      gradient:
+        'from-blue-600/20 to-indigo-600/20',
+
+      border:
+        'border-blue-500/20',
+    },
+
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      label: 'Fuel Station',
+
+      action: () =>
+        window.open(
+          'https://www.google.com/maps/search/petrol+pump+near+me'
+        ),
+
+      gradient:
+        'from-green-600/20 to-emerald-600/20',
+
+      border:
+        'border-green-500/20',
+    },
+
   ];
 
   return (
@@ -234,7 +299,7 @@ const Home = () => {
 
             </div>
 
-            {/* LOGOUT BUTTON */}
+            {/* LOGOUT */}
 
             <button
               onClick={handleLogout}
@@ -413,7 +478,7 @@ const Home = () => {
 
       </div>
 
-       {/* SOS BUTTON */}
+      {/* SOS BUTTON */}
 
       <div className="relative z-10 flex justify-center mt-8">
 
@@ -517,8 +582,6 @@ const Home = () => {
         </div>
 
       </div>
-
-     
 
       {/* STATUS */}
 
