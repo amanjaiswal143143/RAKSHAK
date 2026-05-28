@@ -82,40 +82,83 @@ const SOS = () => {
             const emergencyCode =
               crypto.randomUUID();
 
-            /* FETCH GUARDIANS */
+            /* CURRENT USER */
+
+            const user =
+              await supabase.auth.getUser();
+
+            const userId =
+              user.data.user?.id;
+
+            if (!userId) {
+
+              setError(
+                'Please login first'
+              );
+
+              setLoading(false);
+
+              return;
+            }
+
+            /* FETCH ONLY CURRENT USER GUARDIANS */
 
             const {
               data: guardians,
               error: guardianError,
             } = await supabase
               .from('guardians')
-              .select('*');
+              .select('*')
+              .eq('user_id', userId);
 
             if (guardianError) {
+
               console.log(
                 guardianError
               );
             }
 
+            if (
+              !guardians ||
+              guardians.length === 0
+            ) {
+
+              setError(
+                'No guardians found'
+              );
+
+              setLoading(false);
+
+              return;
+            }
+
             /* SEND WHATSAPP ALERT */
 
-            await fetch(
-              'https://rakshak-backend-7t7e.onrender.com',
-              {
-                method: 'POST',
+            const response =
+              await fetch(
+                'https://rakshak-backend-7t7e.onrender.com/send-sos',
+                {
+                  method: 'POST',
 
-                headers: {
-                  'Content-Type':
-                    'application/json',
-                },
+                  headers: {
+                    'Content-Type':
+                      'application/json',
+                  },
 
-                body: JSON.stringify({
-                  guardians,
-                  latitude,
-                  longitude,
-                }),
-              }
-            );
+                  body: JSON.stringify({
+                    guardians,
+                    latitude,
+                    longitude,
+                  }),
+                }
+              );
+
+            if (!response.ok) {
+
+              throw new Error(
+                'Failed to send WhatsApp alert'
+              );
+            }
 
             /* SAVE SOS */
 
@@ -132,13 +175,15 @@ const SOS = () => {
 
                     longitude:
                       longitude.toString(),
+
+                    user_id: userId,
                   },
                 ]);
 
             if (error) {
 
               setError(
-                'Failed to send SOS'
+                'Failed to save SOS'
               );
 
               setLoading(false);
@@ -245,55 +290,6 @@ const SOS = () => {
         </motion.div>
 
       </div>
-
-      {/* AI BANNER */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        className="
-          mt-8
-          bg-white/[0.04]
-          border
-          border-white/10
-          rounded-3xl
-          p-5
-          backdrop-blur-2xl
-          relative
-          overflow-hidden
-        "
-      >
-
-        <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 blur-3xl rounded-full" />
-
-        <div className="relative flex items-center gap-4">
-
-          <div className="w-14 h-14 rounded-2xl bg-red-500/20 flex items-center justify-center text-3xl">
-            🚨
-          </div>
-
-          <div>
-
-            <h2 className="font-bold text-lg">
-              Rakshak Emergency Shield
-            </h2>
-
-            <p className="text-sm text-gray-400 mt-1">
-              AI monitors emergency conditions
-              and instantly alerts guardians.
-            </p>
-
-          </div>
-
-        </div>
-
-      </motion.div>
 
       {/* LOADING */}
 
@@ -442,64 +438,43 @@ const SOS = () => {
               "
             />
 
-            <motion.div
-              animate={{
-                scale: [1, 1.15, 1],
+            <motion.button
+              whileTap={{
+                scale: 0.92,
               }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-              }}
+              onClick={handleSOS}
+              className="
+                relative
+                w-60
+                h-60
+                rounded-full
+                bg-gradient-to-br
+                from-red-400
+                via-red-500
+                to-red-700
+                flex
+                flex-col
+                items-center
+                justify-center
+                shadow-[0_0_100px_rgba(239,68,68,0.7)]
+                border
+                border-red-300/30
+              "
             >
 
-              <motion.button
-                whileTap={{
-                  scale: 0.92,
-                }}
-                onClick={handleSOS}
-                className="
-                  relative
-                  w-60
-                  h-60
-                  rounded-full
-                  bg-gradient-to-br
-                  from-red-400
-                  via-red-500
-                  to-red-700
-                  flex
-                  flex-col
-                  items-center
-                  justify-center
-                  shadow-[0_0_100px_rgba(239,68,68,0.7)]
-                  border
-                  border-red-300/30
-                "
-              >
+              <div className="text-8xl">
+                🚨
+              </div>
 
-                <motion.div
-                  animate={{
-                    scale: [1, 1.15, 1],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                  }}
-                  className="text-8xl"
-                >
-                  🚨
-                </motion.div>
+              <h2 className="text-5xl font-black text-white mt-2">
+                SOS
+              </h2>
 
-                <h2 className="text-5xl font-black text-white mt-2">
-                  SOS
-                </h2>
+              <p className="text-white/80 mt-2 text-sm">
+                Tap Once For Emergency
+              </p>
 
-                <p className="text-white/80 mt-2 text-sm">
-                  Tap Once For Emergency
-                </p>
-
-              </motion.button>
-
-            </motion.div>
+            </motion.button>
 
           </motion.div>
         )}
@@ -540,120 +515,6 @@ const SOS = () => {
         )}
 
       </AnimatePresence>
-
-      {/* INFO CARDS */}
-
-      {!isNightMode && (
-
-        <div className="space-y-4 mt-20">
-
-          <Card className="bg-white/5 border border-cyan-500/20 rounded-3xl">
-
-            <div className="flex items-center gap-4">
-
-              <div className="text-4xl">
-                📍
-              </div>
-
-              <div>
-
-                <p className="text-gray-400 text-sm">
-                  Live Location
-                </p>
-
-                <p className="font-bold">
-                  Shared automatically
-                </p>
-
-              </div>
-
-            </div>
-
-          </Card>
-
-          <Card className="bg-white/5 border border-green-500/20 rounded-3xl">
-
-            <div className="flex items-center gap-4">
-
-              <div className="text-4xl">
-                👥
-              </div>
-
-              <div>
-
-                <p className="text-gray-400 text-sm">
-                  Guardians
-                </p>
-
-                <p className="font-bold">
-                  Emergency contacts notified
-                </p>
-
-              </div>
-
-            </div>
-
-          </Card>
-
-          <Card className="bg-white/5 border border-red-500/20 rounded-3xl">
-
-            <div className="flex items-center gap-4">
-
-              <div className="text-4xl">
-                🚑
-              </div>
-
-              <div>
-
-                <p className="text-gray-400 text-sm">
-                  Response System
-                </p>
-
-                <p className="font-bold">
-                  Nearby emergency services alerted
-                </p>
-
-              </div>
-
-            </div>
-
-          </Card>
-
-        </div>
-      )}
-
-      {/* NIGHT MODE */}
-
-      {isNightMode && (
-
-        <div className="mt-16">
-
-          <Card className="bg-red-500/10 border border-red-500/20 rounded-3xl">
-
-            <div className="flex items-center gap-4">
-
-              <div className="text-4xl">
-                🌙
-              </div>
-
-              <div>
-
-                <p className="text-red-400 font-bold">
-                  Night Safety Mode
-                </p>
-
-                <p className="text-sm text-gray-400 mt-1">
-                  Emergency optimized interface active
-                </p>
-
-              </div>
-
-            </div>
-
-          </Card>
-
-        </div>
-      )}
 
       {/* SAFETY MODAL */}
 

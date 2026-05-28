@@ -49,10 +49,19 @@ const Guardian = () => {
 
   const fetchGuardians = async () => {
 
+    const user =
+      await supabase.auth.getUser();
+
+    const userId =
+      user.data.user?.id;
+
+    if (!userId) return;
+
     const { data, error } =
       await supabase
         .from('guardians')
         .select('*')
+        .eq('user_id', userId)
         .order('id', {
           ascending: false,
         });
@@ -94,6 +103,21 @@ const Guardian = () => {
         return;
       }
 
+      const user =
+        await supabase.auth.getUser();
+
+      const userId =
+        user.data.user?.id;
+
+      if (!userId) {
+
+        showToast(
+          'Please login first'
+        );
+
+        return;
+      }
+
       const { error } =
         await supabase
           .from('guardians')
@@ -107,6 +131,8 @@ const Guardian = () => {
 
               relationship:
                 newGuardian.relationship,
+
+              user_id: userId,
             },
           ]);
 
@@ -127,6 +153,8 @@ const Guardian = () => {
         );
 
       } else {
+
+        console.log(error);
 
         showToast(
           'Failed to add guardian'
@@ -201,12 +229,11 @@ const Guardian = () => {
             const longitude =
               position.coords.longitude;
 
-            console.log(
-              'Tracking:',
-              trackingId,
-              latitude,
-              longitude
-            );
+            const user =
+              await supabase.auth.getUser();
+
+            const userId =
+              user.data.user?.id;
 
             const { error } =
               await supabase
@@ -221,6 +248,8 @@ const Guardian = () => {
 
                     longitude:
                       longitude.toString(),
+
+                    user_id: userId,
                   },
                 ]);
 
@@ -263,13 +292,9 @@ const Guardian = () => {
 
     <div className="min-h-screen bg-black text-white pb-28 overflow-hidden relative px-4 pt-6">
 
-      {/* BACKGROUND */}
-
       <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-purple-600/10 blur-[120px]" />
 
       <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-green-600/10 blur-[120px]" />
-
-      {/* TOAST */}
 
       <AnimatePresence>
 
@@ -303,14 +328,8 @@ const Guardian = () => {
               rounded-2xl
               text-green-300
               font-medium
-              shadow-lg
-              flex
-              items-center
-              gap-3
             "
           >
-
-            <CheckCircle2 className="w-5 h-5" />
 
             {successMessage}
 
@@ -319,23 +338,13 @@ const Guardian = () => {
 
       </AnimatePresence>
 
-      {/* HEADER */}
-
-      <div className="relative z-10 flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8">
 
         <div>
 
-          <div className="flex items-center gap-3">
-
-            <h1 className="text-4xl font-black">
-              Guardian
-            </h1>
-
-            <span className="text-green-400 text-4xl font-black">
-              AI
-            </span>
-
-          </div>
+          <h1 className="text-4xl font-black">
+            Guardian AI
+          </h1>
 
           <p className="text-gray-400 mt-2">
             Trusted emergency network
@@ -343,66 +352,7 @@ const Guardian = () => {
 
         </div>
 
-        <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-purple-500/20 to-green-500/20 border border-white/10 flex items-center justify-center backdrop-blur-xl">
-
-          <Shield className="w-7 h-7 text-purple-400" />
-
-        </div>
-
       </div>
-
-      {/* AI CARD */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 15,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        className="
-          relative
-          overflow-hidden
-          rounded-[32px]
-          bg-white/[0.04]
-          border
-          border-white/10
-          backdrop-blur-2xl
-          p-6
-          mb-8
-        "
-      >
-
-        <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 blur-3xl rounded-full" />
-
-        <div className="relative flex items-center gap-4">
-
-          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-
-            <Sparkles className="w-8 h-8 text-white" />
-
-          </div>
-
-          <div>
-
-            <h2 className="text-xl font-bold">
-              Rakshak Guardian Shield
-            </h2>
-
-            <p className="text-gray-400 text-sm mt-1">
-              Guardians receive live alerts,
-              tracking, and emergency updates.
-            </p>
-
-          </div>
-
-        </div>
-
-      </motion.div>
-
-      {/* SHARE LIVE TRIP */}
 
       <motion.button
         whileTap={{
@@ -431,56 +381,6 @@ const Guardian = () => {
         </div>
 
       </motion.button>
-
-      {/* TRIP LINK */}
-
-      {tripLink && (
-
-        <div className="bg-white/[0.04] border border-white/10 rounded-3xl p-4 mb-8 backdrop-blur-xl">
-
-          <div className="flex items-center justify-between gap-3">
-
-            <div className="overflow-hidden">
-
-              <p className="text-xs text-gray-400 mb-1">
-                Live Tracking Link
-              </p>
-
-              <p className="text-green-400 truncate text-sm">
-                {tripLink}
-              </p>
-
-            </div>
-
-            <button
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  tripLink
-                )
-              }
-              className="
-                w-12
-                h-12
-                rounded-2xl
-                bg-green-500/10
-                border
-                border-green-500/20
-                flex
-                items-center
-                justify-center
-              "
-            >
-
-              <Copy className="w-5 h-5 text-green-400" />
-
-            </button>
-
-          </div>
-
-        </div>
-      )}
-
-      {/* TITLE */}
 
       <div className="flex items-center justify-between mb-5">
 
@@ -516,30 +416,6 @@ const Guardian = () => {
         </motion.button>
 
       </div>
-
-      {/* EMPTY */}
-
-      {guardians.length === 0 && (
-
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-10 text-center">
-
-          <User
-            className="mx-auto mb-4 text-gray-500"
-            size={40}
-          />
-
-          <h3 className="text-lg font-semibold mb-2">
-            No Guardians Added
-          </h3>
-
-          <p className="text-gray-400 text-sm">
-            Add trusted contacts
-          </p>
-
-        </div>
-      )}
-
-      {/* GUARDIAN LIST */}
 
       <div className="space-y-5">
 
@@ -623,176 +499,6 @@ const Guardian = () => {
         ))}
 
       </div>
-
-      {/* ADD MODAL */}
-
-      <AnimatePresence>
-
-        {showAddModal && (
-          <>
-            <motion.div
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-              }}
-              onClick={() =>
-                setShowAddModal(false)
-              }
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
-            />
-
-            <motion.div
-              initial={{
-                y: 100,
-                opacity: 0,
-              }}
-              animate={{
-                y: 0,
-                opacity: 1,
-              }}
-              exit={{
-                y: 100,
-                opacity: 0,
-              }}
-              className="
-                fixed
-                bottom-0
-                left-0
-                right-0
-                bg-zinc-950
-                border-t
-                border-zinc-800
-                rounded-t-[36px]
-                p-6
-                pb-44
-                z-50
-                max-h-[85vh]
-                overflow-y-auto
-              "
-            >
-
-              <div className="flex items-center justify-between mb-6">
-
-                <h2 className="text-2xl font-bold">
-                  Add Guardian
-                </h2>
-
-                <button
-                  onClick={() =>
-                    setShowAddModal(false)
-                  }
-                >
-                  <X />
-                </button>
-
-              </div>
-
-              <div className="space-y-4">
-
-                <input
-                  type="text"
-                  placeholder="Guardian Name"
-                  value={newGuardian.name}
-                  onChange={(e) =>
-                    setNewGuardian({
-                      ...newGuardian,
-                      name: e.target.value,
-                    })
-                  }
-                  className="
-                    w-full
-                    bg-zinc-900
-                    border
-                    border-zinc-800
-                    rounded-2xl
-                    px-4
-                    py-4
-                    outline-none
-                  "
-                />
-
-                <input
-                  type="text"
-                  placeholder="+91xxxxxxxxxx"
-                  value={newGuardian.phone}
-                  onChange={(e) =>
-                    setNewGuardian({
-                      ...newGuardian,
-                      phone: e.target.value,
-                    })
-                  }
-                  className="
-                    w-full
-                    bg-zinc-900
-                    border
-                    border-zinc-800
-                    rounded-2xl
-                    px-4
-                    py-4
-                    outline-none
-                  "
-                />
-
-                <input
-                  type="text"
-                  placeholder="Relationship"
-                  value={
-                    newGuardian.relationship
-                  }
-                  onChange={(e) =>
-                    setNewGuardian({
-                      ...newGuardian,
-                      relationship:
-                        e.target.value,
-                    })
-                  }
-                  className="
-                    w-full
-                    bg-zinc-900
-                    border
-                    border-zinc-800
-                    rounded-2xl
-                    px-4
-                    py-4
-                    outline-none
-                  "
-                />
-
-                <motion.button
-                  whileTap={{
-                    scale: 0.97,
-                  }}
-                  onClick={
-                    handleAddGuardian
-                  }
-                  className="
-                    w-full
-                    bg-gradient-to-r
-                    from-purple-600
-                    to-pink-600
-                    rounded-2xl
-                    py-4
-                    font-semibold
-                    mt-4
-                  "
-                >
-
-                  Save Guardian
-
-                </motion.button>
-
-              </div>
-
-            </motion.div>
-          </>
-        )}
-
-      </AnimatePresence>
 
     </div>
   );

@@ -13,8 +13,11 @@ import {
   Navigation,
   WifiOff,
   Brain,
-  LogIn,
+  LogOut,
 } from 'lucide-react';
+
+import { supabase }
+from '../supabase/client';
 
 import EmergencyActionPanel from '../components/emergency/EmergencyActionPanel';
 
@@ -101,6 +104,17 @@ const Home = () => {
 
   }, []);
 
+  /* LOGOUT */
+
+  const handleLogout =
+    async () => {
+
+      await supabase.auth.signOut();
+
+      window.location.href =
+        '/auth';
+    };
+
   const quickActions = [
     {
       icon: <MapPin className="w-5 h-5" />,
@@ -186,35 +200,61 @@ const Home = () => {
 
           </div>
 
-          {/* ONLINE STATUS */}
+          <div className="flex flex-col items-end gap-2">
 
-          <div
-            className={`px-4 py-2 rounded-full border backdrop-blur-xl ${
-              isOnline
-                ? 'bg-green-500/10 border-green-500/20'
-                : 'bg-red-500/10 border-red-500/20'
-            }`}
-          >
+            {/* ONLINE STATUS */}
 
-            <div className="flex items-center gap-2">
+            <div
+              className={`px-4 py-2 rounded-full border backdrop-blur-xl ${
+                isOnline
+                  ? 'bg-green-500/10 border-green-500/20'
+                  : 'bg-red-500/10 border-red-500/20'
+              }`}
+            >
 
-              <div
-                className={`w-2 h-2 rounded-full animate-pulse ${
-                  isOnline
-                    ? 'bg-green-500'
-                    : 'bg-red-500'
-                }`}
-              />
+              <div className="flex items-center gap-2">
 
-              <span className="text-xs font-medium">
+                <div
+                  className={`w-2 h-2 rounded-full animate-pulse ${
+                    isOnline
+                      ? 'bg-green-500'
+                      : 'bg-red-500'
+                  }`}
+                />
 
-                {isOnline
-                  ? 'Online'
-                  : 'Offline'}
+                <span className="text-xs font-medium">
 
-              </span>
+                  {isOnline
+                    ? 'Online'
+                    : 'Offline'}
+
+                </span>
+
+              </div>
 
             </div>
+
+            {/* LOGOUT BUTTON */}
+
+            <button
+              onClick={handleLogout}
+              className="
+                px-3
+                py-2
+                rounded-xl
+                bg-red-500/10
+                border
+                border-red-500/20
+                text-red-400
+                text-xs
+                font-medium
+                backdrop-blur-xl
+              "
+            >
+
+              Logout
+
+            </button>
 
           </div>
 
@@ -327,32 +367,6 @@ const Home = () => {
 
                 </button>
 
-                <button
-                  onClick={() =>
-                    navigate('/auth')
-                  }
-                  className="
-                    flex
-                    items-center
-                    gap-2
-                    px-5
-                    py-3
-                    rounded-2xl
-                    bg-green-500/10
-                    border
-                    border-green-500/20
-                    text-green-400
-                    font-medium
-                    backdrop-blur-xl
-                  "
-                >
-
-                  <LogIn className="w-4 h-4" />
-
-                  Sign In
-
-                </button>
-
               </div>
 
               {/* STATS */}
@@ -396,6 +410,54 @@ const Home = () => {
           </div>
 
         </div>
+
+      </div>
+
+       {/* SOS BUTTON */}
+
+      <div className="relative z-10 flex justify-center mt-8">
+
+        <motion.button
+          whileTap={{
+            scale: 0.95,
+          }}
+          onClick={() =>
+            setIsEmergencyPanelOpen(true)
+          }
+          className="
+            relative
+            w-56
+            h-56
+            rounded-full
+            bg-gradient-to-br
+            from-red-500
+            via-red-600
+            to-red-800
+            flex
+            flex-col
+            items-center
+            justify-center
+            border
+            border-red-400/30
+            shadow-[0_0_90px_rgba(239,68,68,0.45)]
+          "
+        >
+
+          <Phone className="w-14 h-14 text-white mb-3" />
+
+          <h2 className="text-3xl font-black tracking-widest">
+
+            SOS
+
+          </h2>
+
+          <p className="text-xs text-white/80 mt-1">
+
+            Emergency Help
+
+          </p>
+
+        </motion.button>
 
       </div>
 
@@ -456,53 +518,7 @@ const Home = () => {
 
       </div>
 
-      {/* SOS BUTTON */}
-
-      <div className="relative z-10 flex justify-center mt-12">
-
-        <motion.button
-          whileTap={{
-            scale: 0.95,
-          }}
-          onClick={() =>
-            setIsEmergencyPanelOpen(true)
-          }
-          className="
-            relative
-            w-56
-            h-56
-            rounded-full
-            bg-gradient-to-br
-            from-red-500
-            via-red-600
-            to-red-800
-            flex
-            flex-col
-            items-center
-            justify-center
-            border
-            border-red-400/30
-            shadow-[0_0_90px_rgba(239,68,68,0.45)]
-          "
-        >
-
-          <Phone className="w-14 h-14 text-white mb-3" />
-
-          <h2 className="text-3xl font-black tracking-widest">
-
-            SOS
-
-          </h2>
-
-          <p className="text-xs text-white/80 mt-1">
-
-            Emergency Help
-
-          </p>
-
-        </motion.button>
-
-      </div>
+     
 
       {/* STATUS */}
 
