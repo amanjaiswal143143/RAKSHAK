@@ -8,14 +8,10 @@ import {
   Shield,
   Phone,
   MessageCircle,
-  Copy,
   Share2,
   X,
   Plus,
   Trash2,
-  User,
-  Sparkles,
-  CheckCircle2,
 } from 'lucide-react';
 
 const Guardian = () => {
@@ -39,7 +35,7 @@ const Guardian = () => {
       relationship: '',
     });
 
-  /* ---------------- LOAD GUARDIANS ---------------- */
+  /* LOAD */
 
   useEffect(() => {
 
@@ -72,7 +68,7 @@ const Guardian = () => {
     }
   };
 
-  /* ---------------- TOAST ---------------- */
+  /* TOAST */
 
   const showToast = (message) => {
 
@@ -85,7 +81,7 @@ const Guardian = () => {
     }, 3000);
   };
 
-  /* ---------------- ADD GUARDIAN ---------------- */
+  /* ADD */
 
   const handleAddGuardian =
     async () => {
@@ -162,7 +158,7 @@ const Guardian = () => {
       }
     };
 
-  /* ---------------- DELETE ---------------- */
+  /* DELETE */
 
   const handleDeleteGuardian =
     async (id) => {
@@ -179,7 +175,7 @@ const Guardian = () => {
       );
     };
 
-  /* ---------------- CALL ---------------- */
+  /* CALL */
 
   const callGuardian = (phone) => {
 
@@ -187,7 +183,7 @@ const Guardian = () => {
       `tel:${phone}`;
   };
 
-  /* ---------------- MESSAGE ---------------- */
+  /* MESSAGE */
 
   const messageGuardian =
     (phone) => {
@@ -196,7 +192,7 @@ const Guardian = () => {
         `sms:${phone}`;
     };
 
-  /* ---------------- LIVE TRACKING ---------------- */
+  /* LIVE TRACKING */
 
   const generateTripLink =
     async () => {
@@ -235,34 +231,22 @@ const Guardian = () => {
             const userId =
               user.data.user?.id;
 
-            const { error } =
-              await supabase
-                .from('live_tracking')
-                .insert([
-                  {
-                    tracking_id:
-                      trackingId,
+            await supabase
+              .from('live_tracking')
+              .insert([
+                {
+                  tracking_id:
+                    trackingId,
 
-                    latitude:
-                      latitude.toString(),
+                  latitude:
+                    latitude.toString(),
 
-                    longitude:
-                      longitude.toString(),
+                  longitude:
+                    longitude.toString(),
 
-                    user_id: userId,
-                  },
-                ]);
-
-            if (error) {
-
-              console.log(error);
-
-            } else {
-
-              console.log(
-                'Live location inserted'
-              );
-            }
+                  user_id: userId,
+                },
+              ]);
 
           },
 
@@ -295,6 +279,8 @@ const Guardian = () => {
       <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-purple-600/10 blur-[120px]" />
 
       <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-green-600/10 blur-[120px]" />
+
+      {/* TOAST */}
 
       <AnimatePresence>
 
@@ -338,6 +324,8 @@ const Guardian = () => {
 
       </AnimatePresence>
 
+      {/* HEADER */}
+
       <div className="flex items-center justify-between mb-8">
 
         <div>
@@ -353,6 +341,8 @@ const Guardian = () => {
         </div>
 
       </div>
+
+      {/* LIVE TRIP */}
 
       <motion.button
         whileTap={{
@@ -381,6 +371,8 @@ const Guardian = () => {
         </div>
 
       </motion.button>
+
+      {/* TITLE */}
 
       <div className="flex items-center justify-between mb-5">
 
@@ -416,6 +408,8 @@ const Guardian = () => {
         </motion.button>
 
       </div>
+
+      {/* GUARDIANS */}
 
       <div className="space-y-5">
 
@@ -499,6 +493,167 @@ const Guardian = () => {
         ))}
 
       </div>
+
+      {/* ADD MODAL */}
+
+      <AnimatePresence>
+
+        {showAddModal && (
+
+          <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            className="
+              fixed
+              inset-0
+              bg-black/70
+              z-50
+              flex
+              items-center
+              justify-center
+              px-5
+            "
+          >
+
+            <motion.div
+              initial={{
+                scale: 0.9,
+                opacity: 0,
+              }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+              }}
+              exit={{
+                scale: 0.9,
+                opacity: 0,
+              }}
+              className="
+                bg-zinc-900
+                p-6
+                rounded-3xl
+                w-full
+                max-w-md
+                border
+                border-white/10
+              "
+            >
+
+              <div className="flex items-center justify-between mb-5">
+
+                <h2 className="text-2xl font-bold">
+                  Add Guardian
+                </h2>
+
+                <button
+                  onClick={() =>
+                    setShowAddModal(false)
+                  }
+                >
+
+                  <X />
+
+                </button>
+
+              </div>
+
+              <input
+                type="text"
+                placeholder="Guardian Name"
+                value={newGuardian.name}
+                onChange={(e) =>
+                  setNewGuardian({
+                    ...newGuardian,
+                    name: e.target.value,
+                  })
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  bg-zinc-800
+                  text-white
+                  mb-4
+                  outline-none
+                "
+              />
+
+              <input
+                type="text"
+                placeholder="Phone Number"
+                value={newGuardian.phone}
+                onChange={(e) =>
+                  setNewGuardian({
+                    ...newGuardian,
+                    phone: e.target.value,
+                  })
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  bg-zinc-800
+                  text-white
+                  mb-4
+                  outline-none
+                "
+              />
+
+              <input
+                type="text"
+                placeholder="Relationship"
+                value={
+                  newGuardian.relationship
+                }
+                onChange={(e) =>
+                  setNewGuardian({
+                    ...newGuardian,
+                    relationship:
+                      e.target.value,
+                  })
+                }
+                className="
+                  w-full
+                  p-4
+                  rounded-2xl
+                  bg-zinc-800
+                  text-white
+                  mb-5
+                  outline-none
+                "
+              />
+
+              <button
+                onClick={
+                  handleAddGuardian
+                }
+                className="
+                  w-full
+                  bg-green-500
+                  py-4
+                  rounded-2xl
+                  text-black
+                  font-bold
+                "
+              >
+
+                Save Guardian
+
+              </button>
+
+            </motion.div>
+
+          </motion.div>
+        )}
+
+      </AnimatePresence>
 
     </div>
   );
